@@ -42,6 +42,8 @@ def parse_args():
 def main():
     logger = get_logger('RUN')
 
+    torch.cuda.empty_cache()
+
     args = parse_args()
     assert len(args.data), '--data should be a list of data files'
 
