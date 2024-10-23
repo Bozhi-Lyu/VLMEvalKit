@@ -43,6 +43,7 @@ def main():
     logger = get_logger('RUN')
 
     torch.cuda.empty_cache()
+    torch.backends.cuda.matmul.allow_fp16_reduced_precision_reduction = False
 
     args = parse_args()
     assert len(args.data), '--data should be a list of data files'
@@ -230,6 +231,7 @@ def main():
                 continue
 
     if world_size > 1:
+        logger.info(f'world_size = {world_size};')
         dist.barrier()
 
 
