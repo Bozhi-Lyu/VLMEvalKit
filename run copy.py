@@ -9,12 +9,6 @@ from vlmeval.inference_mt import infer_data_job_mt
 from vlmeval.smp import *
 from vlmeval.utils.result_transfer import MMMU_result_transfer, MMTBench_result_transfer
 
-import flash_attn
-import sys
-# print("Python version:", sys.version)
-# print("Torch version:", torch.__version__)
-# print(flash_attn.__version__)
-
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -66,8 +60,16 @@ def main():
                 v.keywords['verbose'] = args.verbose
                 supported_VLM[k] = v
 
-    rank, world_size = get_rank_and_world_size()
-    print("RANK:", rank, "WORLD SiZE", world_size)
+    # rank, world_size = get_rank_and_world_size()
+    # print("RANK:", rank, "WORLD SiZE", world_size)
+
+    # Set default MASTER_ADDR and MASTER_PORT if not already set
+    os.environ.setdefault('MASTER_ADDR', 'localhost')
+    os.environ.setdefault('MASTER_PORT', '12355')  # Use any open port
+    
+    world_size = 2
+    rank = int(os.environ.get('RANK', 0))  # This assumes `RANK` is set by environment or passed as an argument
+    
     if world_size > 1:
         local_rank = os.environ.get('LOCAL_RANK', 0)
         torch.cuda.set_device(int(local_rank))

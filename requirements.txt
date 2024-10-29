@@ -30,4 +30,5 @@ typing_extensions>=4.7.1
 validators
 xlsxwriter
 torchvision
-autoawq
+flash-attn
+qwen-vl-utils
